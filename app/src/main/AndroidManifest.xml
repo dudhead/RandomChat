@@ -7,6 +7,15 @@
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="err.com.randomchat.permission.C2D_MESSAGE"  android:protectionLevel="signature"/>
+
+
+    <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
+
+
 
     <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -21,6 +30,38 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="err.com.randomchat" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".gcm.RandomChatGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="err.com.randomchat.gcm.DeviceInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="err.com.randomchat.gcm.RegistrationIntentService"
+            android:exported="false">
+        </service>
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
