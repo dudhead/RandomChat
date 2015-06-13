@@ -1,6 +1,6 @@
 package com.randomchat.model;
 
-public class FacebookRequestModel {
+public class UserRegisterRequest {
 
 	private String token;
 	private String firstName;

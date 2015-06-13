@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -33,6 +31,8 @@ import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,7 +48,7 @@ import com.randomchat.Constants;
 public class XmppClient {
 
 	static final String MESSAGE_KEY = "SERVER_MESSAGE";
-	Logger logger = Logger.getLogger("SmackCcsClient");
+	private Logger logger = LoggerFactory.getLogger(XmppClient.class);
 
 	static Random random = new Random();
 	XMPPConnection connection;
@@ -206,8 +206,8 @@ public class XmppClient {
 	public void handleAckReceipt(Map<String, Object> jsonObject) {
 		String messageId = jsonObject.get("message_id").toString();
 		String from = jsonObject.get("from").toString();
-		logger.log(Level.INFO, "handleAckReceipt() from: " + from
-				+ ", messageId: " + messageId);
+		logger.info("handleAckReceipt() from:{} , messageId: {}", from,
+				messageId);
 	}
 
 	/**
@@ -220,8 +220,8 @@ public class XmppClient {
 	public void handleNackReceipt(Map<String, Object> jsonObject) {
 		String messageId = jsonObject.get("message_id").toString();
 		String from = jsonObject.get("from").toString();
-		logger.log(Level.INFO, "handleNackReceipt() from: " + from
-				+ ", messageId: " + messageId);
+		logger.info("handleNackReceipt() from:{} , messageId: {}", from,
+				messageId);
 	}
 
 	/**
@@ -305,12 +305,10 @@ public class XmppClient {
 
 		// NOTE: Set to true to launch a window with information about packets
 		// sent and received
-		config.setDebuggerEnabled(true);
 
 		// -Dsmack.debugEnabled=true
 		SmackConfiguration.DEBUG_ENABLED = true;
 		connection = new XMPPTCPConnection(config);
-		config.setDebuggerEnabled(false);
 		connection.connect();
 
 		connection.addConnectionListener(new ConnectionListener() {
@@ -322,17 +320,17 @@ public class XmppClient {
 
 			@Override
 			public void reconnectionFailed(Exception e) {
-				logger.log(Level.INFO, "Reconnection failed.. ", e);
+				logger.info("Reconnection failed.. ", e);
 			}
 
 			@Override
 			public void reconnectingIn(int seconds) {
-				logger.log(Level.INFO, "Reconnecting in %d secs", seconds);
+				logger.info("Reconnecting in %d secs", seconds);
 			}
 
 			@Override
 			public void connectionClosedOnError(Exception e) {
-				logger.log(Level.INFO, "Connection closed on error.");
+				logger.info("Connection closed on error.");
 			}
 
 			@Override
@@ -358,13 +356,12 @@ public class XmppClient {
 
 			@Override
 			public void processPacket(Packet packet) {
-				logger.log(Level.INFO, "Received: " + packet.toXML());
+				logger.info("Received: {}", packet.toXML());
 				Message incomingMessage = (Message) packet;
 				GcmPacketExtension gcmPacket = (GcmPacketExtension) incomingMessage
 						.getExtension(Constants.GCM_NAMESPACE);
 				String json = gcmPacket.getJson();
 				try {
-					@SuppressWarnings("unchecked")
 					Map<String, Object> jsonObject = new ObjectMapper()
 							.readValue(json,
 									new TypeReference<Map<String, Object>>() {
@@ -390,12 +387,11 @@ public class XmppClient {
 						// Process Nack
 						handleNackReceipt(jsonObject);
 					} else {
-						logger.log(Level.WARNING,
-								"Unrecognized message type (%s)",
+						logger.warn("Unrecognized message type ({})",
 								messageType.toString());
 					}
 				} catch (Exception e) {
-					logger.log(Level.SEVERE, "Couldn't send echo.", e);
+					logger.error("Couldn't send echo.", e);
 				}
 			}
 		}, new PacketTypeFilter(Message.class));
@@ -404,7 +400,7 @@ public class XmppClient {
 		connection.addPacketInterceptor(new PacketInterceptor() {
 			@Override
 			public void interceptPacket(Packet packet) {
-				logger.log(Level.INFO, "Sent: {0}", packet.toXML());
+				logger.info("Sent: {}", packet.toXML());
 			}
 		}, new PacketTypeFilter(Message.class));
 

@@ -1,23 +1,28 @@
 package com.randomchat.entity;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
+@Document
 public class User {
 
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String id;
+
+	@Field
 	private String token;
-	private String firstName;
-	private String lastName;
-	private String email;
+
+	@Field
 	private String deviceId;
+
+	@Field
+	private FacebookEntity facebookEntity;
 
 	public String getToken() {
 		return token;
@@ -25,30 +30,6 @@ public class User {
 
 	public void setToken(String token) {
 		this.token = token;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getDeviceId() {
@@ -65,6 +46,14 @@ public class User {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public FacebookEntity getFacebookEntity() {
+		return facebookEntity;
+	}
+
+	public void setFacebookEntity(FacebookEntity facebookEntity) {
+		this.facebookEntity = facebookEntity;
 	}
 
 }
