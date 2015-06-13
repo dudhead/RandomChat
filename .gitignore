@@ -29,3 +29,11 @@ proguard/
 
 # Log Files
 *.log
+/target/
+
+
+#Eclipse Files
+.classpath
+.project
+.settings/
+
