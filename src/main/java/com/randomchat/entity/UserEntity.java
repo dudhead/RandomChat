@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
-public class User {
+public class UserEntity {
 
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -16,21 +16,10 @@ public class User {
 	private String id;
 
 	@Field
-	private String token;
-
-	@Field
 	private String deviceId;
 
 	@Field
 	private FacebookEntity facebookEntity;
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 
 	public String getDeviceId() {
 		return deviceId;

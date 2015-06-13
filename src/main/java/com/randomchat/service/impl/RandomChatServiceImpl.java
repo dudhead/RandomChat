@@ -2,6 +2,7 @@ package com.randomchat.service.impl;
 
 import java.io.IOException;
 
+import org.dozer.DozerBeanMapper;
 import org.jivesoftware.smack.SmackException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.randomchat.dao.UserDao;
-import com.randomchat.entity.FacebookEntity;
-import com.randomchat.entity.User;
-import com.randomchat.model.UserRegisterRequest;
+import com.randomchat.entity.UserEntity;
+import com.randomchat.model.User;
 import com.randomchat.service.RandomChatService;
 import com.randomchat.xmpp.XmppClient;
 
@@ -30,7 +30,10 @@ public class RandomChatServiceImpl implements RandomChatService {
 
 	@Autowired
 	private UserDao userDao;
-	
+
+	@Autowired
+	private DozerBeanMapper mapper;
+
 	@Override
 	public boolean sendMessage(String message, String deviceRegId) {
 		logger.info("Sending message {} to {}", message, deviceRegId);
@@ -45,17 +48,14 @@ public class RandomChatServiceImpl implements RandomChatService {
 	}
 
 	@Override
-	public User registerUser(UserRegisterRequest requestModel) {
-		FacebookEntity facebookEntity = new FacebookEntity();
-		facebookEntity.setEmail("lll@msdf.com");
-		facebookEntity.setFirstName("Karthik");
+	public User registerUser(User requestModel) {
+		logger.info("Registering user {} ", requestModel.getFacebook()
+				.getFirstName());
+		UserEntity userEntity = mapper.map(requestModel, UserEntity.class);
 
-		User user = new User();
-		user.setFacebookEntity(facebookEntity);
-		user.setDeviceId("DEVICE KARTHIK MOTO G");
+		userEntity = userDao.save(userEntity);
 
-		userDao.save(user);
-		
-		return null;
+		return mapper.map(userEntity, User.class);
 	}
+
 }

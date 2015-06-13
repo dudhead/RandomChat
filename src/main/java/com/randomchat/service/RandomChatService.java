@@ -2,13 +2,13 @@ package com.randomchat.service;
 
 import org.springframework.stereotype.Service;
 
-import com.randomchat.entity.User;
-import com.randomchat.model.UserRegisterRequest;
+import com.randomchat.entity.UserEntity;
+import com.randomchat.model.User;
 
 @Service
 public interface RandomChatService {
 
 	boolean sendMessage(String message, String deviceRegId);
 
-	User registerUser(UserRegisterRequest requestModel);
+	User registerUser(User requestModel);
 }

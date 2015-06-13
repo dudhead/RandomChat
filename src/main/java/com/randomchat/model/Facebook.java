@@ -1,12 +1,19 @@
-package com.randomchat.entity;
+package com.randomchat.model;
 
-
-public class FacebookEntity {
+public class Facebook {
 
 	private String token;
 	private String firstName;
 	private String lastName;
 	private String email;
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -30,14 +37,6 @@ public class FacebookEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
 	}
 
 }

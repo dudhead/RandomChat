@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.randomchat.dao.UserDao;
-import com.randomchat.entity.FacebookEntity;
-import com.randomchat.entity.User;
-import com.randomchat.model.UserRegisterRequest;
+import com.randomchat.model.User;
 import com.randomchat.service.RandomChatService;
 
 @RestController
@@ -23,10 +20,10 @@ public class BaseController {
 
 	@RequestMapping(value = "/login/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<User> registerUser(
-			@RequestBody UserRegisterRequest requestModel) {
-		randomChatService.registerUser(requestModel);
-
-		return new ResponseEntity<User>(user, HttpStatus.CREATED);
+			@RequestBody User requestModel) {
+		return new ResponseEntity<User>(
+				randomChatService.registerUser(requestModel),
+				HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/send", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
